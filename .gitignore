@@ -1,1 +1,4 @@
+*.gem
+/.fixtures.yml
 Gemfile.lock
+spec/fixtures/modules

@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+
+require 'pathname'
+require 'optparse'
+
+require 'puppet_fixtures'
+
+COMMANDS = ['clean', 'install', 'show']
+
+command = ARGV[0]
+unless COMMANDS.include?(command)
+  $stderr.puts "Usage: #{$0} #{COMMANDS.join('|')}"
+  exit 1
+end
+
+fixtures = PuppetFixtures::Fixtures.new
+
+case command
+when 'clean'
+  fixtures.clean
+when 'install'
+  fixtures.download
+when 'show'
+  if (path = fixtures.fixture_path)
+    puts "Parsing #{fixtures.fixture_path}"
+
+    if fixtures.symlinks.any?
+      puts
+      puts "Symlinks"
+      fixtures.symlinks.each do |_target, symlink|
+        puts "  #{symlink}"
+      end
+    end
+
+    if fixtures.forge_modules.any?
+      puts
+      puts "Forge modules"
+      fixtures.forge_modules.each do |mod, opts|
+        dir = Pathname.new(opts[:target]).relative_path_from(fixtures.module_target_dir)
+        description = mod
+        description += " #{opts[:ref]}"
+        puts "  #{dir} => #{description}"
+      end
+    end
+
+    if fixtures.repositories.any?
+      puts
+      puts "Repositories"
+      fixtures.repositories.each do |repository, opts|
+        dir = Pathname.new(opts[:target]).relative_path_from(fixtures.module_target_dir)
+        description = ["#{opts[:scm]}+#{repository}", opts[:ref]]
+        description << "branch #{opts[:branch]}" if opts[:branch]
+        puts "  #{dir} => #{description.compact.join(' ')}"
+      end
+    end
+  else
+    $stderr.puts "No fixture file found"
+  end
+end
