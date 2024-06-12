@@ -182,8 +182,12 @@ module PuppetFixtures
       logger.debug("Downloading to #{module_target_dir}")
       FileUtils.mkdir_p(module_target_dir)
 
-      symlinks.each do |symlink|
-        symlink.create
+      if symlinks.empty?
+        logger.debug('No symlinks to create')
+      else
+        symlinks.each do |symlink|
+          symlink.create
+        end
       end
 
       queue = Queue.new
@@ -195,7 +199,10 @@ module PuppetFixtures
         queue << [:forge, remote, opts]
       end
 
-      return if queue.empty?
+      if queue.empty?
+        logger.debug('Nothing to download')
+        return
+      end
 
       instance = self
 
