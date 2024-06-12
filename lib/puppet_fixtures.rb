@@ -124,34 +124,6 @@ module PuppetFixtures
                     end
     end
 
-    # Create a junction on Windows or otherwise a symlink
-    # works on windows and linux
-    # @param target [String]
-    #   the target directory
-    # @param link [String]
-    #   the name of the link you wish to create
-    def setup_symlink(target, link)
-      return if File.symlink?(link)
-
-      logger.info("Creating symlink from #{link} to #{target}")
-      if PuppetFixtures.windows?
-        begin
-          require 'win32/dir'
-        rescue LoadError
-        end
-        target = File.join(File.dirname(link), target) unless Pathname.new(target).absolute?
-        if Dir.respond_to?(:create_junction)
-          Dir.create_junction(link, target)
-        else
-          warn 'win32-dir gem not installed, falling back to executing mklink directly'
-          # TODO: use run_command
-          system("call mklink /J \"#{link.tr('/', '\\')}\" \"#{target.tr('/', '\\')}\"")
-        end
-      else
-        FileUtils.ln_sf(target, link)
-      end
-    end
-
     # @param [String] remote
     #   The remote url or namespace/name of the module to download
     # @param [String] scm
