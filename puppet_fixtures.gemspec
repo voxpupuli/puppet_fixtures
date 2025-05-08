@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
     refactoring to make it available standalone.
   DESC
   s.authors               = ['Ewoud Kohl van Wijngaarden']
-  s.files                 = ['lib/puppet_fixtures.rb', 'lib/puppet_fixtures/tasks.rb']
+  s.files                 = ['lib/puppet_fixtures.rb', 'lib/puppet_fixtures/tasks.rb', 'LICENSE']
   s.executables           << 'puppet-fixtures'
   s.homepage              = 'https://github.com/voxpupuli/puppet_fixtures'
   s.metadata              = { 'source_code_uri' => 'https://github.com/voxpupuli/puppet_fixtures' }
