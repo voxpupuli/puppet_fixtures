@@ -142,6 +142,7 @@ module PuppetFixtures
     # @return [String]
     #   the spec/fixtures/modules directory in the module root folder
     def module_target_dir
+      # TODO: relative to source_dir?
       @module_target_dir ||= File.expand_path(File.join('spec', 'fixtures', 'modules'))
     end
 
