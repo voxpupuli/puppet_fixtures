@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Gem::Specification.new do |s|
   s.name                 = 'puppet_fixtures'
   s.version              = '1.0.1'
@@ -9,10 +11,11 @@ Gem::Specification.new do |s|
   DESC
   s.authors               = ['Ewoud Kohl van Wijngaarden']
   s.files                 = ['lib/puppet_fixtures.rb', 'lib/puppet_fixtures/tasks.rb', 'LICENSE']
-  s.executables           << 'puppet-fixtures'
+  s.executables           = 'puppet-fixtures'
   s.homepage              = 'https://github.com/voxpupuli/puppet_fixtures'
   s.metadata              = { 'source_code_uri' => 'https://github.com/voxpupuli/puppet_fixtures' }
   s.required_ruby_version = '>= 3.2', '< 4'
 
   s.add_dependency 'rake', '~> 13.0'
+  s.add_development_dependency 'voxpupuli-rubocop', '~> 4.2.0'
 end

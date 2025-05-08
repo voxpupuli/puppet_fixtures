@@ -65,67 +65,65 @@ module PuppetFixtures
 
     def fixtures
       @fixtures ||= begin
-                      categories = read_fixtures_file['fixtures']
+        categories = read_fixtures_file['fixtures']
 
-                      categories['symlinks'] ||= begin
-                                                   metadata = PuppetFixtures::Metadata.new(File.join(source_dir, 'metadata.json'))
-                                                   { metadata.name.split('-').last => source_dir }
-                                                 rescue ArgumentError
-                                                   {}
-                                                 end
-                      categories['forge_modules'] ||= {}
-                      categories['repositories'] ||= {}
+        categories['symlinks'] ||= begin
+          metadata = PuppetFixtures::Metadata.new(File.join(source_dir, 'metadata.json'))
+          { metadata.name.split('-').last => source_dir }
+        rescue ArgumentError
+          {}
+        end
+        categories['forge_modules'] ||= {}
+        categories['repositories'] ||= {}
 
-                      defaults = { 'target' => module_target_dir }
+        defaults = { 'target' => module_target_dir }
 
-                      ['symlinks', 'forge_modules', 'repositories'].to_h do |category|
-                        # load defaults from the `.fixtures.yml` `defaults` section
-                        # for the requested category and merge them into my defaults
-                        if (category_defaults = categories.dig('defaults', category))
-                          category_defaults = defaults.merge(category_defaults)
-                        else
-                          category_defaults = defaults
-                        end
+        %w[symlinks forge_modules repositories].to_h do |category|
+          # load defaults from the `.fixtures.yml` `defaults` section
+          # for the requested category and merge them into my defaults
+          category_defaults = if (category_defaults = categories.dig('defaults', category))
+                                defaults.merge(category_defaults)
+                              else
+                                defaults
+                              end
 
-                        entries = categories[category].to_h do |fixture, opts|
-                          # convert a simple string fixture to a hash, by
-                          # using the string fixture as the `repo` option of the hash.
-                          if opts.instance_of?(String)
-                            opts = { 'repo' => opts }
-                          end
-                          # there should be a warning or something if it's not a hash...
-                          next unless opts.instance_of?(Hash)
+          entries = categories[category].to_h do |fixture, opts|
+            # convert a simple string fixture to a hash, by
+            # using the string fixture as the `repo` option of the hash.
+            opts = { 'repo' => opts } if opts.instance_of?(String)
+            # there should be a warning or something if it's not a hash...
+            next unless opts.instance_of?(Hash)
 
-                          # merge our options into the defaults to get the
-                          # final option list
-                          opts = category_defaults.merge(opts)
+            # merge our options into the defaults to get the
+            # final option list
+            opts = category_defaults.merge(opts)
 
-                          next unless include_repo?(opts['puppet_version'])
+            next unless include_repo?(opts['puppet_version'])
 
-                          entry = validate_fixture_hash!(
-                            target: File.join(opts['target'], fixture),
-                            ref: opts['ref'] || opts['tag'],
-                            branch: opts['branch'],
-                            scm: opts.fetch('scm', 'git'),
-                            flags: opts['flags'],
-                            subdir: opts['subdir'],
-                          )
+            entry = validate_fixture_hash!(
+              target: File.join(opts['target'], fixture),
+              ref: opts['ref'] || opts['tag'],
+              branch: opts['branch'],
+              scm: opts.fetch('scm', 'git'),
+              flags: opts['flags'],
+              subdir: opts['subdir'],
+            )
 
-                          case category
-                          when 'forge_modules'
-                            entry.delete(:scm)
-                            entry.delete(:branch)
-                            entry.delete(:subdir)
-                          when 'symlinks'
-                            entry = PuppetFixtures::Symlink.new(link: entry[:target], target: opts['repo'])
-                          end
+            case category
+            when 'forge_modules'
+              entry.delete(:scm)
+              entry.delete(:branch)
+              entry.delete(:subdir)
+            when 'symlinks'
+              entry = PuppetFixtures::Symlink.new(link: entry[:target], target: opts['repo'])
+            end
 
-                          [opts['repo'], entry]
-                        end
+            [opts['repo'], entry]
+          end
 
-                        [category, entries]
-                      end
-                    end
+          [category, entries]
+        end
+      end
     end
 
     # @param [String] remote
@@ -171,7 +169,7 @@ module PuppetFixtures
         end
       end
 
-      command = ['puppet', 'module', 'install']
+      command = %w[puppet module install]
       command << '--version' << ref if ref
       command += flags if flags
       command += ['--ignore-dependencies', '--force', '--target-dir', module_target_dir, remote]
@@ -215,7 +213,7 @@ module PuppetFixtures
       thread_count = [@max_thread_limit, queue.size].min
       logger.debug("Download queue size: #{queue.size}; using #{thread_count} threads")
 
-      threads = thread_count.times.map do |i|
+      threads = Array.new(thread_count) do |_i|
         Thread.new do
           loop do
             begin
@@ -266,8 +264,6 @@ module PuppetFixtures
         '.fixtures.yml'
       elsif File.exist?('.fixtures.yaml')
         '.fixtures.yaml'
-      else
-        nil
       end
     end
 
@@ -300,9 +296,9 @@ module PuppetFixtures
     # creates a logger so we can log events with certain levels
     def logger
       @logger ||= begin
-                    require 'logger'
-                    Logger.new($stderr, level: ENV['ENABLE_LOGGER'] ? Logger::DEBUG : Logger::INFO)
-                  end
+        require 'logger'
+        Logger.new($stderr, level: ENV['ENABLE_LOGGER'] ? Logger::DEBUG : Logger::INFO)
+      end
     end
 
     def read_fixtures_file
@@ -372,7 +368,7 @@ module PuppetFixtures
     # @return [String[1]] The module name
     def name
       n = @metadata['name']
-      raise ArgumentError "No module name found" if !n || n.empty?
+      raise ArgumentError 'No module name found' if !n || n.empty?
 
       n
     end
@@ -380,7 +376,7 @@ module PuppetFixtures
     # @return [String[1]] The module version
     def version
       v = @metadata['version']
-      raise ArgumentError "No module name found" if !v || v.empty?
+      raise ArgumentError 'No module name found' if !v || v.empty?
 
       v
     end
@@ -405,6 +401,7 @@ module PuppetFixtures
         begin
           require 'win32/dir'
         rescue LoadError
+          # the require only works on windows
         end
         target = File.join(File.dirname(@link), @target) unless Pathname.new(@target).absolute?
         if Dir.respond_to?(:create_junction)
@@ -478,9 +475,9 @@ module PuppetFixtures
 
       def remove_subdirectory(subdir)
         Dir.mktmpdir do |tmpdir|
-          FileUtils.mv(Dir.glob(File.join(@target, subdir, "{.[^\.]*,*}")), tmpdir)
+          FileUtils.mv(Dir.glob(File.join(@target, subdir, '{.[^.]*,*}')), tmpdir)
           FileUtils.rm_rf(File.join(@target, subdir))
-          FileUtils.mv(Dir.glob(File.join(tmpdir, "{.[^\.]*,*}")), @target.to_s)
+          FileUtils.mv(Dir.glob(File.join(tmpdir, '{.[^.]*,*}')), @target.to_s)
         end
       end
 
@@ -504,16 +501,16 @@ module PuppetFixtures
       def logger
         # TODO: duplicated
         @logger ||= begin
-                      require 'logger'
-                      # TODO: progname?
-                      Logger.new($stderr, level: ENV['ENABLE_LOGGER'] ? Logger::DEBUG : Logger::INFO)
-                    end
+          require 'logger'
+          # TODO: progname?
+          Logger.new($stderr, level: ENV['ENABLE_LOGGER'] ? Logger::DEBUG : Logger::INFO)
+        end
       end
     end
 
     class Git < Base
       def clone(flags = nil)
-        command = ['git', 'clone']
+        command = %w[git clone]
         command.push('--depth', '1') unless @ref
         command.push('-b', @branch) if @branch
         command.push(flags) if flags
@@ -524,7 +521,7 @@ module PuppetFixtures
 
       def update
         # TODO: should this pull?
-        command = ['git', 'fetch']
+        command = %w[git fetch]
         command.push('--unshallow') if shallow_git_repo?
 
         run_command(command, chdir: @target)
@@ -558,7 +555,7 @@ module PuppetFixtures
 
     class Mercurial < Base
       def clone(flags = nil)
-        command = ['hg', 'clone']
+        command = %w[hg clone]
         command.push('-b', @branch) if @branch
         command.push(flags) if flags
         command.push(@remote, @target)
@@ -567,7 +564,7 @@ module PuppetFixtures
       end
 
       def update
-        run_command(['hg', 'pull'])
+        run_command(%w[hg pull])
       end
 
       def revision

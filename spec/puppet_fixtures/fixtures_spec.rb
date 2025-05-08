@@ -1,16 +1,20 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'tmpdir'
 
 describe PuppetFixtures::Fixtures do
   subject(:instance) { described_class.new(source_dir: source_dir) }
+
   let(:fixtures) { described_class.new }
 
   let(:source_dir) { Dir.mktmpdir }
 
   after { FileUtils.rm_rf(source_dir) }
 
-  describe '#clean' do
-  end
+  # TODO: Implement tests
+  # describe '#clean' do
+  # end
 
   describe '#download' do
     let(:logger) { double('Logger') }
@@ -84,31 +88,31 @@ describe PuppetFixtures::Fixtures do
   describe '#include_repo?' do
     it 'returns true if version_range is nil' do
       expect(fixtures).not_to receive(:gem_version)
-      expect(fixtures.send(:include_repo?, nil)).to eq(true)
+      expect(fixtures.send(:include_repo?, nil)).to be(true)
     end
 
     it 'returns true if puppet version matches the range' do
       expect(fixtures).to receive(:gem_version).with('openvox').and_return('7.0.0')
-      expect(fixtures.send(:include_repo?, '>= 6.0.0')).to eq(true)
+      expect(fixtures.send(:include_repo?, '>= 6.0.0')).to be(true)
     end
 
     it 'returns false if puppet version does not match the range' do
       expect(fixtures).to receive(:gem_version).with('openvox').and_return('7.0.0')
-      expect(fixtures.send(:include_repo?, '< 6.0.0')).to eq(false)
+      expect(fixtures.send(:include_repo?, '< 6.0.0')).to be(false)
     end
 
     it 'falls back to puppet gem if openvox is not found' do
       expect(fixtures).to receive(:gem_version).with('openvox').and_return(nil)
       expect(fixtures).to receive(:gem_version).with('puppet').and_return('6.0.0')
-      expect(fixtures.send(:include_repo?, '>= 6.0.0')).to eq(true)
+      expect(fixtures.send(:include_repo?, '>= 6.0.0')).to be(true)
     end
 
     it 'raises if neither openvox nor puppet gem is found' do
       expect(fixtures).to receive(:gem_version).with('openvox').and_return(nil)
       expect(fixtures).to receive(:gem_version).with('puppet').and_return(nil)
-      expect {
+      expect do
         fixtures.send(:include_repo?, '>= 6.0.0')
-      }.to raise_error(RuntimeError, /Neither 'openvox' nor 'puppet' gem could be found/)
+      end.to raise_error(RuntimeError, /Neither 'openvox' nor 'puppet' gem could be found/)
     end
   end
 end

@@ -1,15 +1,18 @@
 #!/usr/bin/env ruby
 
+# frozen_string_literal: true
+
 require 'pathname'
 require 'optparse'
+require 'English'
 
 require 'puppet_fixtures'
 
-COMMANDS = ['clean', 'install', 'show']
+COMMANDS = %w[clean install show].freeze
 
 command = ARGV[0]
 unless COMMANDS.include?(command)
-  $stderr.puts "Usage: #{$0} #{COMMANDS.join('|')}"
+  warn "Usage: #{$PROGRAM_NAME} #{COMMANDS.join('|')}"
   exit 1
 end
 
@@ -21,20 +24,20 @@ when 'clean'
 when 'install'
   fixtures.download
 when 'show'
-  if (path = fixtures.fixture_path)
+  if fixtures.fixture_path
     puts "Parsing #{fixtures.fixture_path}"
 
     if fixtures.symlinks.any?
       puts
-      puts "Symlinks"
-      fixtures.symlinks.each do |_target, symlink|
+      puts 'Symlinks'
+      fixtures.symlinks.each_value do |symlink|
         puts "  #{symlink}"
       end
     end
 
     if fixtures.forge_modules.any?
       puts
-      puts "Forge modules"
+      puts 'Forge modules'
       fixtures.forge_modules.each do |mod, opts|
         dir = Pathname.new(opts[:target]).relative_path_from(fixtures.module_target_dir)
         description = mod
@@ -45,7 +48,7 @@ when 'show'
 
     if fixtures.repositories.any?
       puts
-      puts "Repositories"
+      puts 'Repositories'
       fixtures.repositories.each do |repository, opts|
         dir = Pathname.new(opts[:target]).relative_path_from(fixtures.module_target_dir)
         description = ["#{opts[:scm]}+#{repository}", opts[:ref]]
@@ -54,6 +57,6 @@ when 'show'
       end
     end
   else
-    $stderr.puts "No fixture file found"
+    warn 'No fixture file found'
   end
 end
