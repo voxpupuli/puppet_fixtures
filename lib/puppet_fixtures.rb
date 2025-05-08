@@ -339,7 +339,11 @@ module PuppetFixtures
           "Calling command #{Shellwords.join(command)}"
         end
       end
-      system(*command, chdir: chdir)
+      if chdir
+        system(*command, chdir: chdir)
+      else
+        system(*command)
+      end
     end
   end
 
@@ -467,7 +471,7 @@ module PuppetFixtures
         end
       end
 
-      def run_command(command)
+      def run_command(command, chdir: nil)
         # TODO: duplicated
         logger.debug do
           require 'shellwords'
@@ -477,7 +481,11 @@ module PuppetFixtures
             "Calling command #{Shellwords.join(command)}"
           end
         end
-        system(*command, chdir: chdir)
+        if chdir
+          system(*command, chdir: chdir)
+        else
+          system(*command)
+        end
       end
 
       def logger
