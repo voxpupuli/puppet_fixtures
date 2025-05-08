@@ -189,7 +189,8 @@ module PuppetFixtures
       if symlinks.empty?
         logger.debug('No symlinks to create')
       else
-        symlinks.each do |symlink|
+        symlinks.each_value do |symlink|
+          logger.info("Creating symlink #{symlink}")
           symlink.create
         end
       end
@@ -245,10 +246,9 @@ module PuppetFixtures
         FileUtils.rm_rf(target)
       end
 
-      symlinks.each_value do |opts|
-        target = opts[:target]
-        logger.debug("Removing symlink #{target}")
-        FileUtils.rm_f(target)
+      symlinks.each_value do |symlink|
+        logger.debug("Removing symlink #{symlink}")
+        symlink.remove
       end
     end
 
@@ -384,7 +384,6 @@ module PuppetFixtures
     def create
       return if File.symlink?(@link)
 
-      logger.info("Creating symlink from #{@link} to #{@target}")
       if PuppetFixtures.windows?
         begin
           require 'win32/dir'
@@ -401,6 +400,10 @@ module PuppetFixtures
       else
         FileUtils.ln_sf(@target, @link)
       end
+    end
+
+    def remove
+      FileUtils.rm_f(@link)
     end
 
     def to_s
