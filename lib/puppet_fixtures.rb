@@ -266,7 +266,6 @@ module PuppetFixtures
 
     private
 
-
     def include_repo?(version_range)
       return true unless version_range
 
