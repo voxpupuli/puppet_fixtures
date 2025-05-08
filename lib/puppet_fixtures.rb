@@ -9,16 +9,16 @@ require 'yaml'
 # These fixtures can be symlinks, repositories (git or Mercurial) or forge
 # modules.
 module PuppetFixtures
+  # @return [Boolean]
+  #   true if the os is a windows system
+  def self.windows?
+    # Ruby only sets File::ALT_SEPARATOR on Windows and Rubys standard library
+    # uses this to check for Windows
+    !!File::ALT_SEPARATOR
+  end
+
   class Fixtures
     attr_reader :source_dir
-
-    # @return [Boolean]
-    #   true if the os is a windows system
-    def self.windows?
-      # Ruby only sets File::ALT_SEPARATOR on Windows and Rubys standard library
-      # uses this to check for Windows
-      !!File::ALT_SEPARATOR
-    end
 
     def initialize(source_dir: Dir.pwd, max_thread_limit: 10)
       @source_dir = source_dir
