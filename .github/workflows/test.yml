@@ -18,6 +18,8 @@ jobs:
         with:
           ruby-version: '3.4'
           bundler-cache: true
+      - name: Verify gem builds
+        run: gem build --strict --verbose *.gemspec
       - id: ruby
         uses: voxpupuli/ruby-version@v1
   test:
@@ -35,14 +37,14 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
+      - name: Verify gem builds
+        run: gem build --strict --verbose *.gemspec
       - name: check that required tasks are available
         run: |
           bundle exec rake --rakefile lib/puppet_fixtures/tasks.rb -T 'fixtures:clean' | grep --quiet .
           bundle exec rake --rakefile lib/puppet_fixtures/tasks.rb -T 'fixtures:prep' | grep --quiet .
       - name: Run rspec tests
         run: bundle exec rake spec
-      - name: Verify gem builds
-        run: gem build --strict --verbose *.gemspec
 
   tests:
     needs:
