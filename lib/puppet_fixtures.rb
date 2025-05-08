@@ -4,6 +4,10 @@ require 'json'
 require 'open3'
 require 'yaml'
 
+# PuppetFixtures is a mechanism to download Puppet fixtures.
+#
+# These fixtures can be symlinks, repositories (git or Mercurial) or forge
+# modules.
 module PuppetFixtures
   class Fixtures
     attr_reader :source_dir
