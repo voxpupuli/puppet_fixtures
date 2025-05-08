@@ -4,3 +4,6 @@
 /doc
 Gemfile.lock
 spec/fixtures/modules
+/.bundle
+/vendor
+/.vendor

@@ -1,0 +1,54 @@
+name: Test
+
+on:
+  pull_request: {}
+  push:
+    branches:
+      - master
+
+jobs:
+  matrix:
+    runs-on: ubuntu-24.04
+    outputs:
+      ruby: ${{ steps.ruby.outputs.versions }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+      - id: ruby
+        uses: voxpupuli/ruby-version@v1
+  test:
+    name: "Ruby ${{ matrix.ruby }}"
+    runs-on: ubuntu-latest
+    needs: matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ${{ fromJSON(needs.matrix.outputs.ruby) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: check that required tasks are available
+        run: |
+          bundle exec rake --rakefile lib/puppet_fixtures/tasks.rb -T 'fixtures:clean' | grep --quiet .
+          bundle exec rake --rakefile lib/puppet_fixtures/tasks.rb -T 'fixtures:prep' | grep --quiet .
+      - name: Run rspec tests
+        run: bundle exec rake spec
+      - name: Verify gem builds
+        run: gem build --strict --verbose *.gemspec
+
+  tests:
+    needs:
+      - matrix
+      - test
+    runs-on: ubuntu-latest
+    name: Test suite
+    steps:
+      - run: echo Test suite completed
