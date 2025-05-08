@@ -136,7 +136,7 @@ module PuppetFixtures
     #   Returns true if the module was downloaded successfully, false otherwise
     def download_repository(remote, target:, scm:, subdir:, ref:, branch:, flags:)
       repository = PuppetFixtures::Repository.factory(scm: scm, remote: remote, target: target, branch: branch, ref: ref)
-      repository.download
+      repository.download(flags, subdir)
     end
 
     # @return [String]
@@ -437,12 +437,12 @@ module PuppetFixtures
         @branch = branch
       end
 
-      def download(flags)
+      def download(flags = nil, subdir = nil)
         can_update = false
-        if File.directory?(target)
+        if File.directory?(@target)
           if remote_url_changed?
-            warn "Remote for #{target} has changed, recloning repository"
-            FileUtils.rm_rf(target)
+            warn "Remote for #{@target} has changed, recloning repository"
+            FileUtils.rm_rf(@target)
           else
             can_update = true
           end
@@ -452,22 +452,22 @@ module PuppetFixtures
           update
         else
           clone(flags)
-          unless File.exist?(target)
-            raise "Failed to clone #{scm} repository #{remote} into #{target}"
+          unless File.exist?(@target)
+            raise "Failed to clone repository #{@remote} into #{@target}"
           end
         end
 
         revision
-        remove_subdirectory(target, subdir) if subdir
+        remove_subdirectory(subdir) if subdir
       end
 
       protected
 
-      def remove_subdirectory(target, subdir)
+      def remove_subdirectory(subdir)
         Dir.mktmpdir do |tmpdir|
-          FileUtils.mv(Dir.glob(File.join(target, subdir, "{.[^\.]*,*}")), tmpdir)
-          FileUtils.rm_rf(File.join(target, subdir))
-          FileUtils.mv(Dir.glob(File.join(tmpdir, "{.[^\.]*,*}")), target.to_s)
+          FileUtils.mv(Dir.glob(File.join(@target, subdir, "{.[^\.]*,*}")), tmpdir)
+          FileUtils.rm_rf(File.join(@target, subdir))
+          FileUtils.mv(Dir.glob(File.join(tmpdir, "{.[^\.]*,*}")), @target.to_s)
         end
       end
 
@@ -510,19 +510,19 @@ module PuppetFixtures
       end
 
       def update
-         # TODO: should this pull?
+        # TODO: should this pull?
         command = ['git', 'fetch']
         command.push('--unshallow') if shallow_git_repo?
 
-        run_command(command)
+        run_command(command, chdir: @target)
       end
 
       def revision
         return true unless @ref
 
         command = ['git', 'reset', '--hard', @ref]
-        result = run_command(command, chdir: target)
-        raise "Invalid ref #{ref} for #{target}" unless result
+        result = run_command(command, chdir: @target)
+        raise "Invalid ref #{ref} for #{@target}" unless result
 
         result
       end
@@ -561,8 +561,8 @@ module PuppetFixtures
         return true unless @ref
 
         command = ['hg', 'update', '--clean', '-r', @ref]
-        result = run_command(command, chdir: target)
-        raise "Invalid ref #{ref} for #{target}" unless result
+        result = run_command(command, chdir: @target)
+        raise "Invalid ref #{ref} for #{@target}" unless result
 
         result
       end
