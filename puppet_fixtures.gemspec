@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name                 = 'puppet_fixtures'
   s.version              = '0.1.0'
-  s.licenses             = ['Apache-2.0']
+  s.licenses             = ['GPL-2.0-only']
   s.summary              = 'Set up fixtures for Puppet testing'
   s.description          = <<~DESC
     Originally part of puppetlabs_spec_helper, but with a significant
