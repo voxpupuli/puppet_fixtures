@@ -15,4 +15,5 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.7', '< 4'
 
   s.add_dependency 'rake', '~> 13.0'
+  s.add_dependency 'ostruct', '~> 0.6.0'
 end
