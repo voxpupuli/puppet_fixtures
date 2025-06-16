@@ -267,22 +267,21 @@ module PuppetFixtures
 
     private
 
+    def gem_version(name)
+      Gem::Specification.find_by_name(name).version.to_s
+    rescue Gem::LoadError
+      nil
+    end
+
     def include_repo?(version_range)
       return true unless version_range
 
+      puppet_version = gem_version('openvox') || gem_version('puppet')
+      raise "Neither 'openvox' nor 'puppet' gem could be found. Please install one of them." unless puppet_version
+
       require 'semantic_puppet'
 
-      puppet_spec = begin
-        Gem::Specification.find_by_name('openvox')
-      rescue Gem::LoadError
-        begin
-          Gem::Specification.find_by_name('puppet')
-        rescue Gem::LoadError
-          raise "Neither 'openvox' nor 'puppet' gem could be found. Please install one of them."
-        end
-      end
-      puppet_version = SemanticPuppet::Version.parse(puppet_spec.version.to_s)
-
+      puppet_version = SemanticPuppet::Version.parse(puppet_version)
       constraint = SemanticPuppet::VersionRange.parse(version_range)
       constraint.include?(puppet_version)
     end
