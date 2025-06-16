@@ -2,9 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.0](https://github.com/voxpupuli/puppet_fixtures/tree/0.2.0) (2025-06-14)
+## [1.0.0](https://github.com/voxpupuli/puppet_fixtures/tree/1.0.0) (2025-06-16)
 
-[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/v0.1.1...0.2.0)
+[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/v0.2.0...1.0.0)
+
+**Implemented enhancements:**
+
+- Refactor OpenVox/Puppet version detection for easier testing [\#10](https://github.com/voxpupuli/puppet_fixtures/pull/10) ([ekohl](https://github.com/ekohl))
+
+## [v0.2.0](https://github.com/voxpupuli/puppet_fixtures/tree/v0.2.0) (2025-06-15)
+
+[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/v0.1.1...v0.2.0)
 
 **Fixed bugs:**
 
