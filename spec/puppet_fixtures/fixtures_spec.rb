@@ -29,6 +29,22 @@ describe PuppetFixtures::Fixtures do
         expect(logger).to have_received(:debug).with('Nothing to download')
       end
     end
+
+    it 'downloads more than the max thread count' do
+      Dir.chdir(source_dir) do
+        count = instance.instance_variable_get(:@max_thread_limit) + 1
+        fixtures = { 'fixtures' => { 'repositories' => count.times.to_h { |n| ["source#{n}", "target#{n}"] } } }
+        File.write(File.join(source_dir, '.fixtures.yml'), fixtures.to_yaml)
+
+        expect(instance.repositories.size).to eq(count)
+
+        allow(instance).to receive(:download_repository)
+
+        instance.download
+
+        expect(instance).to have_received(:download_repository).exactly(count).times
+      end
+    end
   end
 
   describe '#fixtures' do
