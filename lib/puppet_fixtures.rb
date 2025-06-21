@@ -217,12 +217,18 @@ module PuppetFixtures
 
       threads = thread_count.times.map do |i|
         Thread.new do
-          type, remote, opts = queue.pop(true)
-          case type
-          when :repository
-            instance.download_repository(remote, **opts)
-          when :forge
-            instance.download_module(remote, **opts)
+          loop do
+            begin
+              type, remote, opts = queue.pop(true)
+            rescue ThreadError
+              break # Queue is empty
+            end
+            case type
+            when :repository
+              instance.download_repository(remote, **opts)
+            when :forge
+              instance.download_module(remote, **opts)
+            end
           end
         end
       end

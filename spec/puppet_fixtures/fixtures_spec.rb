@@ -5,7 +5,9 @@ describe PuppetFixtures::Fixtures do
   subject(:instance) { described_class.new(source_dir: source_dir) }
   let(:fixtures) { described_class.new }
 
-  let(:source_dir) { File.join('spec/fixtures/missing') }
+  let(:source_dir) { Dir.mktmpdir }
+
+  after { FileUtils.rm_rf(source_dir) }
 
   describe '#clean' do
   end
@@ -18,15 +20,29 @@ describe PuppetFixtures::Fixtures do
       allow(logger).to receive(:debug)
     end
 
-    it do
-      Dir.mktmpdir do |dir|
-        target = File.join(dir, 'foo')
-        allow(instance).to receive(:module_target_dir).and_return(target)
+    it 'runs without fixtures' do
+      Dir.chdir(source_dir) do
         instance.download
 
-        expect(logger).to have_received(:debug).with("Downloading to #{target}")
+        expect(logger).to have_received(:debug).with("Downloading to #{instance.module_target_dir}")
         expect(logger).to have_received(:debug).with('No symlinks to create')
         expect(logger).to have_received(:debug).with('Nothing to download')
+      end
+    end
+
+    it 'downloads more than the max thread count' do
+      Dir.chdir(source_dir) do
+        count = instance.instance_variable_get(:@max_thread_limit) + 1
+        fixtures = { 'fixtures' => { 'repositories' => count.times.to_h { |n| ["source#{n}", "target#{n}"] } } }
+        File.write(File.join(source_dir, '.fixtures.yml'), fixtures.to_yaml)
+
+        expect(instance.repositories.size).to eq(count)
+
+        allow(instance).to receive(:download_repository)
+
+        instance.download
+
+        expect(instance).to have_received(:download_repository).exactly(count).times
       end
     end
   end
