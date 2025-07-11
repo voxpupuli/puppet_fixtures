@@ -2,9 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.0](https://github.com/voxpupuli/puppet_fixtures/tree/1.0.0) (2025-06-16)
+## [1.0.1](https://github.com/voxpupuli/puppet_fixtures/tree/1.0.1) (2025-07-11)
 
-[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/v0.2.0...1.0.0)
+[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/v1.0.0...1.0.1)
+
+**Fixed bugs:**
+
+- fix: allow for more than 10 fixtures [\#12](https://github.com/voxpupuli/puppet_fixtures/pull/12) ([TheMeier](https://github.com/TheMeier))
+
+## [v1.0.0](https://github.com/voxpupuli/puppet_fixtures/tree/v1.0.0) (2025-06-16)
+
+[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/v0.2.0...v1.0.0)
 
 **Implemented enhancements:**
 
