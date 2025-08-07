@@ -11,7 +11,7 @@ permissions:
   contents: read # minimal permissions required to clone the repo
 
 jobs:
-  matrix:
+  rubocop_and_matrix:
     runs-on: ubuntu-24.04
     outputs:
       ruby: ${{ steps.ruby.outputs.versions }}
@@ -24,16 +24,18 @@ jobs:
           bundler-cache: true
       - name: Verify gem builds
         run: gem build --strict --verbose *.gemspec
+      - name: Run RuboCop
+        run: bundle exec rake rubocop
       - id: ruby
         uses: voxpupuli/ruby-version@v1
   test:
     name: "Ruby ${{ matrix.ruby }}"
     runs-on: ubuntu-latest
-    needs: matrix
+    needs: rubocop_and_matrix
     strategy:
       fail-fast: false
       matrix:
-        ruby: ${{ fromJSON(needs.matrix.outputs.ruby) }}
+        ruby: ${{ fromJSON(needs.rubocop_and_matrix.outputs.ruby) }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup ruby
@@ -43,6 +45,8 @@ jobs:
           bundler-cache: true
       - name: Output Ruby environment
         run: bundle env
+      - name: check that puppet-fixtures script works
+        run: bundle exec puppet-fixtures show 2>&1 | grep --quiet 'No fixture file found'
       - name: Verify gem builds
         run: gem build --strict --verbose *.gemspec
       - name: Run rspec tests
@@ -53,7 +57,7 @@ jobs:
 
   tests:
     needs:
-      - matrix
+      - rubocop_and_matrix
       - test
     runs-on: ubuntu-latest
     name: Test suite
