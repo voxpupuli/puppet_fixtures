@@ -532,7 +532,7 @@ module PuppetFixtures
 
         command = ['git', 'reset', '--hard', @ref]
         result = run_command(command, chdir: @target)
-        raise "Invalid ref #{ref} for #{@target}" unless result
+        raise "Invalid ref #{@ref} for #{@target}" unless result
 
         result
       end
@@ -572,7 +572,7 @@ module PuppetFixtures
 
         command = ['hg', 'update', '--clean', '-r', @ref]
         result = run_command(command, chdir: @target)
-        raise "Invalid ref #{ref} for #{@target}" unless result
+        raise "Invalid ref #{@ref} for #{@target}" unless result
 
         result
       end
