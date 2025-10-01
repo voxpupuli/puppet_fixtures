@@ -174,8 +174,11 @@ module PuppetFixtures
       command += flags if flags
       command += ['--ignore-dependencies', '--force', '--target-dir', module_target_dir, remote]
 
-      unless run_command(command)
-        raise "Failed to install module #{remote} to #{module_target_dir}"
+      Dir.mktmpdir do |working_dir|
+        command += ['--module_working_dir', working_dir]
+        unless run_command(command)
+          raise "Failed to install module #{remote} to #{module_target_dir}"
+        end
       end
 
       true
