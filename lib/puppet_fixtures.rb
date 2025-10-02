@@ -176,9 +176,7 @@ module PuppetFixtures
 
       Dir.mktmpdir do |working_dir|
         command += ['--module_working_dir', working_dir]
-        unless run_command(command)
-          raise "Failed to install module #{remote} to #{module_target_dir}"
-        end
+        raise "Failed to install module #{remote} to #{module_target_dir}" unless run_command(command)
       end
 
       true
