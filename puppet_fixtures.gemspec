@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name                 = 'puppet_fixtures'
-  s.version              = '1.0.1'
+  s.version              = '2.0.0'
   s.licenses             = ['GPL-2.0-only']
   s.summary              = 'Set up fixtures for Puppet testing'
   s.description          = <<~DESC
