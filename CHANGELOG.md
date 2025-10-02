@@ -2,9 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.1](https://github.com/voxpupuli/puppet_fixtures/tree/1.0.1) (2025-07-11)
+## [2.0.0](https://github.com/voxpupuli/puppet_fixtures/tree/2.0.0) (2025-10-02)
 
-[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/v1.0.0...1.0.1)
+[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/v1.0.1...2.0.0)
+
+**Breaking changes:**
+
+- Require Ruby 3.2 or newer [\#17](https://github.com/voxpupuli/puppet_fixtures/pull/17) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Add voxpupuli-rubocop [\#3](https://github.com/voxpupuli/puppet_fixtures/pull/3) ([bastelfreak](https://github.com/bastelfreak))
+
+**Fixed bugs:**
+
+- Fix multi threading for forge modules [\#21](https://github.com/voxpupuli/puppet_fixtures/pull/21) ([Joris29](https://github.com/Joris29))
+- Fix NameError triggered by invalid ref [\#20](https://github.com/voxpupuli/puppet_fixtures/pull/20) ([kajinamit](https://github.com/kajinamit))
+
+## [v1.0.1](https://github.com/voxpupuli/puppet_fixtures/tree/v1.0.1) (2025-07-11)
+
+[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/v1.0.0...v1.0.1)
 
 **Fixed bugs:**
 
