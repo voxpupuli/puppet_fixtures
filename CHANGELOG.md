@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.1](https://github.com/voxpupuli/puppet_fixtures/tree/2.0.1) (2025-10-24)
+
+[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/2.0.0...2.0.1)
+
+**Fixed bugs:**
+
+- gemspec: list Vox Pupuli as author [\#23](https://github.com/voxpupuli/puppet_fixtures/pull/23) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [2.0.0](https://github.com/voxpupuli/puppet_fixtures/tree/2.0.0) (2025-10-02)
 
 [Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/v1.0.1...2.0.0)
