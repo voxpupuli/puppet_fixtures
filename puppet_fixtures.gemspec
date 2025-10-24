@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
     Originally part of puppetlabs_spec_helper, but with a significant
     refactoring to make it available standalone.
   DESC
-  s.authors               = ['Ewoud Kohl van Wijngaarden']
+  s.authors               = ['Ewoud Kohl van Wijngaarden', 'Vox Pupuli']
   s.files                 = ['lib/puppet_fixtures.rb', 'lib/puppet_fixtures/tasks.rb', 'LICENSE']
   s.executables           = 'puppet-fixtures'
   s.homepage              = 'https://github.com/voxpupuli/puppet_fixtures'
