@@ -17,5 +17,5 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 3.2', '< 4'
 
   s.add_dependency 'rake', '~> 13.0'
-  s.add_development_dependency 'voxpupuli-rubocop', '~> 4.2.0'
+  s.add_development_dependency 'voxpupuli-rubocop', '~> 5.0.0'
 end
