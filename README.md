@@ -41,7 +41,7 @@ $ bundle exec puppet-fixtures clean
 
 ## Environment Variables
 
-`puppet_fixtures` will parse environment variables and replace them in the `.fixtures.yml` file on runtime.
+`puppet_fixtures` will parse environment variables and replace them in the `.fixtures.yml` file at runtime.
 This may leak sensitive information in logs, so be careful.
 But this is particularly useful for CI systems where you want to use private repositories.
 
