@@ -115,4 +115,141 @@ describe PuppetFixtures::Fixtures do
       end.to raise_error(RuntimeError, /Neither 'openvox' nor 'puppet' gem could be found/)
     end
   end
+
+  describe '#deep_expand_env' do
+    around do |example|
+      old_env = ENV.to_hash
+      # old_env = ENV.dup
+      example.run
+    ensure
+      ENV.replace(old_env)
+    end
+
+    context 'with strings' do
+      it 'with a single variable' do
+        ENV['SINGLE_VAR'] = 'single_value'
+        input = 'This is a ${SINGLE_VAR}'
+        expected_output = 'This is a single_value'
+
+        output = PuppetFixtures.deep_expand_env(input)
+        expect(output).to eq(expected_output)
+      end
+
+      it 'with multiple variables' do
+        ENV['VAR_A'] = 'valueA'
+        ENV['VAR_B'] = 'valueB'
+        input = 'Values: ${VAR_A} and ${VAR_B}'
+        expected_output = 'Values: valueA and valueB'
+
+        output = PuppetFixtures.deep_expand_env(input)
+        expect(output).to eq(expected_output)
+      end
+
+      it 'with invalid variables' do
+        input = 'This is an ${INVALID_VAR}'
+        expected_output = 'This is an ${INVALID_VAR}'
+
+        output = PuppetFixtures.deep_expand_env(input)
+        expect(output).to eq(expected_output)
+      end
+    end
+
+    context 'with arrays' do
+      it 'with a single variable' do
+        input = ['Item 1', 'Item with ${ARRAY_VAR}', 'Item 3']
+        ENV['ARRAY_VAR'] = 'array_value'
+        expected_output = ['Item 1', 'Item with array_value', 'Item 3']
+        output = PuppetFixtures.deep_expand_env(input)
+        expect(output).to eq(expected_output)
+      end
+
+      it 'with multiple variables' do
+        input = ['${VAR1}', '${VAR2}', 'No var here']
+        ENV['VAR1'] = 'value1'
+        ENV['VAR2'] = 'value2'
+        expected_output = ['value1', 'value2', 'No var here']
+        output = PuppetFixtures.deep_expand_env(input)
+        expect(output).to eq(expected_output)
+      end
+
+      it 'with nested arrays' do
+        input = ['Level 1', ['Level 2 with ${NESTED_VAR}']]
+        ENV['NESTED_VAR'] = 'nested_value'
+        expected_output = ['Level 1', ['Level 2 with nested_value']]
+        output = PuppetFixtures.deep_expand_env(input)
+        expect(output).to eq(expected_output)
+      end
+
+      it 'with invalid variables' do
+        input = ['Item with ${INVALID_VAR}', 'Another item']
+        expected_output = ['Item with ${INVALID_VAR}', 'Another item']
+        output = PuppetFixtures.deep_expand_env(input)
+        expect(output).to eq(expected_output)
+      end
+    end
+
+    context 'with hashes' do
+      it 'with a single variable' do
+        input = { 'key1' => 'Value with ${HASH_VAR}', 'key2' => 'Another value' }
+        ENV['HASH_VAR'] = 'hash_value'
+        expected_output = { 'key1' => 'Value with hash_value', 'key2' => 'Another value' }
+        output = PuppetFixtures.deep_expand_env(input)
+        expect(output).to eq(expected_output)
+      end
+
+      it 'with multiple variables' do
+        input = { 'key1' => '${VAR1}', 'key2' => '${VAR2}' }
+        ENV['VAR1'] = 'value1'
+        ENV['VAR2'] = 'value2'
+        expected_output = { 'key1' => 'value1', 'key2' => 'value2' }
+        output = PuppetFixtures.deep_expand_env(input)
+        expect(output).to eq(expected_output)
+      end
+
+      it 'with invalid variables' do
+        input = { 'key1' => 'Value with ${INVALID_VAR}', 'key2' => 'Another value' }
+        expected_output = { 'key1' => 'Value with ${INVALID_VAR}', 'key2' => 'Another value' }
+        output = PuppetFixtures.deep_expand_env(input)
+        expect(output).to eq(expected_output)
+      end
+
+      it 'with nested structures' do
+        input = {
+          'level1' => {
+            'level2' => [
+              'Value with ${VAR1}',
+              { 'level3_key' => 'Another value with ${VAR2}' },
+            ],
+          },
+        }
+
+        ENV['VAR1'] = 'expanded1'
+        ENV['VAR2'] = 'expanded2'
+
+        expected_output = {
+          'level1' => {
+            'level2' => [
+              'Value with expanded1',
+              { 'level3_key' => 'Another value with expanded2' },
+            ],
+          },
+        }
+
+        output = PuppetFixtures.deep_expand_env(input)
+        expect(output).to eq(expected_output)
+      end
+    end
+
+    it 'leaves non-string values unchanged' do
+      input = {
+        'number' => 42,
+        'boolean' => true,
+        'nil_value' => nil,
+        'array' => [1, 2, 3],
+      }
+
+      output = PuppetFixtures.deep_expand_env(input)
+      expect(output).to eq(input)
+    end
+  end
 end

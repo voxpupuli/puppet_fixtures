@@ -17,6 +17,24 @@ module PuppetFixtures
     !!File::ALT_SEPARATOR
   end
 
+  # @param value [Object]
+  #   The value to expand environment variables in
+  # @return [Object]
+  #   The value with environment variables expanded
+  # @api private
+  def self.deep_expand_env(value)
+    case value
+    when String
+      value.gsub(/\$\{([^}]+)\}/) { ENV.fetch(Regexp.last_match(1)) { Regexp.last_match(0) } }
+    when Hash
+      value.transform_values { |v| deep_expand_env(v) }
+    when Array
+      value.map { |v| deep_expand_env(v) }
+    else
+      value
+    end
+  end
+
   class Fixtures
     attr_reader :source_dir
 
@@ -308,13 +326,15 @@ module PuppetFixtures
       fixtures = nil
       if fixtures_yaml
         begin
-          fixtures = YAML.load_file(fixtures_yaml)
+          raw = YAML.load_file(fixtures_yaml)
+          fixtures = PuppetFixtures.deep_expand_env(raw)
         rescue Errno::ENOENT
           raise "Fixtures file not found: '#{fixtures_yaml}'"
         rescue Psych::SyntaxError => e
           raise "Found malformed YAML in '#{fixtures_yaml}' on line #{e.line} column #{e.column}: #{e.problem}"
         end
       end
+
       fixtures ||= { 'fixtures' => {} }
 
       unless fixtures.include?('fixtures')
