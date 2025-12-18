@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0](https://github.com/voxpupuli/puppet_fixtures/tree/2.1.0) (2025-12-18)
+
+[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/2.0.1...2.1.0)
+
+**Implemented enhancements:**
+
+- feat: Add deep\_expand\_env method for environment variable expansion [\#32](https://github.com/voxpupuli/puppet_fixtures/pull/32) ([rwaffen](https://github.com/rwaffen))
+
 ## [2.0.1](https://github.com/voxpupuli/puppet_fixtures/tree/2.0.1) (2025-10-24)
 
 [Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/2.0.0...2.0.1)
