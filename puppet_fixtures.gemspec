@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.executables           = 'puppet-fixtures'
   s.homepage              = 'https://github.com/voxpupuli/puppet_fixtures'
   s.metadata              = { 'source_code_uri' => 'https://github.com/voxpupuli/puppet_fixtures' }
-  s.required_ruby_version = '>= 3.2', '< 4'
+  s.required_ruby_version = '>= 3.2', '< 5'
 
   s.add_dependency 'rake', '~> 13.0'
   s.add_development_dependency 'voxpupuli-rubocop', '~> 5.0.0'
