@@ -18,5 +18,5 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'logger', '< 2'
   s.add_dependency 'rake', '~> 13.0'
-  s.add_development_dependency 'voxpupuli-rubocop', '~> 5.0.0'
+  s.add_development_dependency 'voxpupuli-rubocop', '~> 5.1.0'
 end
