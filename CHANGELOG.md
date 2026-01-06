@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.0](https://github.com/voxpupuli/puppet_fixtures/tree/2.2.0) (2026-01-06)
+
+[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/2.1.0...2.2.0)
+
+**Implemented enhancements:**
+
+- Add Ruby 4.0 support & Add logger as dependency [\#34](https://github.com/voxpupuli/puppet_fixtures/pull/34) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [2.1.0](https://github.com/voxpupuli/puppet_fixtures/tree/2.1.0) (2025-12-18)
 
 [Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/2.0.1...2.1.0)
