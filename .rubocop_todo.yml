@@ -14,7 +14,7 @@ Naming/PredicateMethod:
   Exclude:
     - 'lib/puppet_fixtures.rb'
 
-# Offense count: 6
+# Offense count: 7
 # Configuration parameters: CountAsOne.
 RSpec/ExampleLength:
   Max: 20
