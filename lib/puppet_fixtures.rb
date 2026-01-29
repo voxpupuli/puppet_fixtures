@@ -424,7 +424,7 @@ module PuppetFixtures
         rescue LoadError
           # the require only works on windows
         end
-        target = File.join(File.dirname(@link), @target) unless Pathname.new(@target).absolute?
+        target = Pathname.new(@target).absolute? ? @target : File.join(File.dirname(@link), @target)
         if Dir.respond_to?(:create_junction)
           Dir.create_junction(@link, target)
         else
