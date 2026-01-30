@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.1](https://github.com/voxpupuli/puppet_fixtures/tree/2.2.1) (2026-01-30)
+
+[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/2.2.0...2.2.1)
+
+**Fixed bugs:**
+
+- Fix target variable name for Windows symlink creation [\#37](https://github.com/voxpupuli/puppet_fixtures/pull/37) ([yakatz](https://github.com/yakatz))
+
 ## [2.2.0](https://github.com/voxpupuli/puppet_fixtures/tree/2.2.0) (2026-01-06)
 
 [Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/2.1.0...2.2.0)
