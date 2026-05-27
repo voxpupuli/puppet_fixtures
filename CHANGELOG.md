@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.2](https://github.com/voxpupuli/puppet_fixtures/tree/2.2.2) (2026-05-27)
+
+[Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/2.2.1...2.2.2)
+
+**Fixed bugs:**
+
+- Add fileutils require statement [\#44](https://github.com/voxpupuli/puppet_fixtures/pull/44) ([ekohl](https://github.com/ekohl))
+- Fix typo in documentation [\#43](https://github.com/voxpupuli/puppet_fixtures/pull/43) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [2.2.1](https://github.com/voxpupuli/puppet_fixtures/tree/2.2.1) (2026-01-30)
 
 [Full Changelog](https://github.com/voxpupuli/puppet_fixtures/compare/2.2.0...2.2.1)
