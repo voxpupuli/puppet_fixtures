@@ -48,7 +48,7 @@ module PuppetFixtures
     # @example
     #   {
     #     "puppetlabs-stdlib"=>{
-    #       "target"=>"https://gitlab.com/puppetlabs/puppet-stdlib.git",
+    #       "repo"=>"https://gitlab.com/puppetlabs/puppet-stdlib.git",
     #       "ref"=>nil,
     #       "branch"=>"main",
     #       "scm"=>nil,
